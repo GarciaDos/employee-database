@@ -12,13 +12,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     // Handle POST request to create a new user
     try {
-      const { firstName, lastName, dateEmployed, status } = req.body; // Make sure body is parsed
+      const { firstName, lastName, position, dateEmployed, status } = req.body; // Make sure body is parsed
 
       // Create new user in the database
       const newUser = await prisma.user.create({
         data: {
           firstName,
           lastName,
+          position,
           dateEmployed: new Date(dateEmployed), // Ensure it's parsed as Date
           status,
         },

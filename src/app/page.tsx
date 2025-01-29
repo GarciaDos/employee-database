@@ -7,6 +7,7 @@ type User = {
   id: number;
   firstName: string;
   lastName: string;
+  position: string;
   dateEmployed: string;
   status: string;
 };
@@ -22,8 +23,10 @@ const EditEmployeeModal = ({
 }) => {
   const [firstName, setFirstName] = useState(userToEdit?.firstName || '');
   const [lastName, setLastName] = useState(userToEdit?.lastName || '');
+  const [position, setPosition] = useState(userToEdit?.position || '');
   const [status, setStatus] = useState(userToEdit?.status || 'Active');
   const [dateEmployed, setDateEmployed] = useState(userToEdit?.dateEmployed || '');
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +35,7 @@ const EditEmployeeModal = ({
       id: userToEdit?.id || 0,
       firstName,
       lastName,
+      position,
       status,
       dateEmployed
     };
@@ -61,6 +65,14 @@ const EditEmployeeModal = ({
             onChange={(e) => setLastName(e.target.value)}
             required
           />
+           <input
+            type="text"
+            placeholder="Position"
+            className="w-full p-2 mb-3 border border-gray-300 text-black"
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+            required
+          />
           <input
             type="date"
             className="w-full p-2 mb-3 border border-gray-300 text-black"
@@ -87,6 +99,7 @@ const EditEmployeeModal = ({
 const AddEmployeeModal = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [position, setPosition] = useState('');
   const [status, setStatus] = useState('Active');
   const [dateEmployed, setDateEmployed] = useState('');
 
@@ -96,6 +109,7 @@ const AddEmployeeModal = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateA
     const newUser = {
       firstName,
       lastName,
+      position,
       status,
       dateEmployed,
     };
@@ -138,6 +152,14 @@ const AddEmployeeModal = ({ setOpen }: { setOpen: React.Dispatch<React.SetStateA
             className="w-full p-2 mb-3 border border-gray-300 text-black"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Position"
+            className="w-full p-2 mb-3 border border-gray-300 text-black"
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
             required
           />
           <input
@@ -205,6 +227,10 @@ export default function Home() {
   const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null); // Store user ID to delete
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [firstNameFilter, setFirstNameFilter] = useState('');
+  const [lastNameFilter, setLastNameFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [positionFilter, setPositionFilter] = useState('');
 
   const handleEditClick = (user: User) => {
     setUserToEdit(user);
@@ -244,6 +270,15 @@ export default function Home() {
     fetchuser();
   }, []);
   
+  const filteredUsers = user.filter((u) => {
+    const matchesFirstName = u.firstName.toLowerCase().includes(firstNameFilter.toLowerCase());
+    const matchesLastName = u.lastName.toLowerCase().includes(lastNameFilter.toLowerCase());
+    const matchesPosition = u.position.toLowerCase().includes(positionFilter.toLowerCase());
+    const matchesStatus = statusFilter ? u.status === statusFilter : true;
+  
+    return matchesFirstName && matchesLastName && matchesPosition && matchesStatus;
+  });
+
   const handleDelete = async (id: number) => {
     const response = await fetch(`/api/user/${id}`, {
       method: 'DELETE', // Sending the DELETE request to the user ID route
@@ -266,6 +301,39 @@ export default function Home() {
   return (
     <div className="bg-white min-h-screen p-6">
       <h1 className="text-black text-3xl font-bold mb-4 text-center mb-9">Employee List</h1>
+
+    <div className="mb-4 flex gap-4">
+      <input
+        type="text"
+        placeholder="Filter by First Name"
+        className="w-1/3 p-2 border border-gray-300 text-black"
+        value={firstNameFilter}
+        onChange={(e) => setFirstNameFilter(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Filter by Last Name"
+        className="w-1/3 p-2 border border-gray-300 text-black"
+        value={lastNameFilter}
+        onChange={(e) => setLastNameFilter(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Filter by Position"
+        className="w-1/3 p-2 border border-gray-300 text-black"
+        value={positionFilter}
+        onChange={(e) => setPositionFilter(e.target.value)}
+      />
+      <select
+        className="w-1/3 p-2 border border-gray-300 text-black bg-white focus:outline-none"
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+      >
+        <option value="">All Status</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+    </div>
       
       <button 
         className='flex bg-black text-white px-4 py-2 my-2 border rounded-md hover:bg-gray-50 hover:border-black hover:text-black'
@@ -289,24 +357,26 @@ export default function Home() {
       <table className="min-w-full border-collapse border border-gray-200">
         <thead>
           <tr className="bg-gray-100">
-            <th className="text-black border border-gray-300 p-2">Id</th>
-            <th className="text-black border border-gray-300 p-2">First Name</th>
-            <th className="text-black border border-gray-300 p-2">Last Name</th>
-            <th className="text-black border border-gray-300 p-2">Date Employed</th>
-            <th className="text-black border border-gray-300 p-2">Status</th>
-            <th className="text-black border border-gray-300 p-2">Modify</th>
+            <th className="text-black border border-gray-300 p-2 text-sm">Id</th>
+            <th className="text-black border border-gray-300 p-2 text-sm">First Name</th>
+            <th className="text-black border border-gray-300 p-2 text-sm">Last Name</th>
+            <th className="text-black border border-gray-300 p-2 text-sm">Position</th>
+            <th className="text-black border border-gray-300 p-2 text-sm">Date Employed</th>
+            <th className="text-black border border-gray-300 p-2 text-sm">Status</th>
+            <th className="text-black border border-gray-300 p-2 text-sm">Modify</th>
 
           </tr>
         </thead>
         <tbody>
-          {user.map((user) => (
+          {filteredUsers.map((user) => (  //{user.map((user) => (
             <tr key={user.id} className="hover:bg-gray-50">
-              <td className="text-black border border-gray-300 p-2">{user.id}</td>
-              <td className="text-black border border-gray-300 p-2">{user.firstName}</td>
-              <td className="text-black border border-gray-300 p-2">{user.lastName}</td>
-              <td className="text-black border border-gray-300 p-2">{new Date(user.dateEmployed).toLocaleDateString()}</td>
+              <td className="text-black border border-gray-300 p-2 text-sm">{user.id}</td>
+              <td className="text-black border border-gray-300 p-2 text-sm">{user.firstName}</td>
+              <td className="text-black border border-gray-300 p-2 text-sm">{user.lastName}</td>
+              <td className="text-black border border-gray-300 p-2 text-sm">{user.position}</td>
+              <td className="text-black border border-gray-300 p-2 text-sm">{new Date(user.dateEmployed).toLocaleDateString()}</td>
               
-              <td className="text-black border border-gray-300 p-2">
+              <td className="text-black border border-gray-300 p-2 text-sm">
                 <span
                   className={`w-4 h-4 inline-block rounded-full mr-2 ${
                     user.status === 'Active' ? 'bg-green-500' : 'bg-red-500'

@@ -16,4 +16,5 @@ model User {
   firstName String
   dateEmployed DateTime
   status String //add active or inactive
+  position String?
 }

@@ -7,12 +7,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { firstName, lastName, dateEmployed, status } = req.body;
+    const { firstName, lastName, position, dateEmployed, status } = req.body;
 
     const newEmployee = await prisma.user.create({
       data: {
         firstName,
         lastName,
+        position,
         dateEmployed: new Date(dateEmployed),
         status,
       },

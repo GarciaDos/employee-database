@@ -25,10 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'PUT') {
     try {
-      const { firstName, lastName, status, dateEmployed } = req.body;
+      const { firstName, lastName,position, status, dateEmployed } = req.body;
   
       // Validate input data
-      if (!firstName || !lastName || !status || !dateEmployed) {
+      if (!firstName || !lastName || !position || !status || !dateEmployed) {
         return res.status(400).json({ error: 'Missing required fields' });
       }
   
@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   
       const updatedUser = await prisma.user.update({
         where: { id: Number(id) },
-        data: { firstName, lastName, status, dateEmployed: validDate.toISOString() },
+        data: { firstName, lastName,position, status, dateEmployed: validDate.toISOString() },
       });
   
       return res.status(200).json(updatedUser);
