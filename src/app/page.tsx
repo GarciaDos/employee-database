@@ -1,6 +1,6 @@
 'use client';
-import prisma from '../../lib/prisma';
-import type { NextApiRequest, NextApiResponse } from 'next';
+//import prisma from '../../lib/prisma';
+//import type { NextApiRequest, NextApiResponse } from 'next';
 import { useEffect, useState } from 'react';
 
 type User = {
