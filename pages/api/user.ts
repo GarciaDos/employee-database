@@ -7,6 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const user = await prisma.user.findMany(); // Adjust based on your actual model
       res.status(200).json(user);
     } catch (error) {
+      console.error('Error fetching data:', error);
       res.status(500).json({ error: 'Failed to fetch data' });
     }
   } else if (req.method === 'POST') {
