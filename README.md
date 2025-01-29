@@ -3,15 +3,15 @@ A simple CRUD Employee Database powered with NextJS, Prisma, SQLite, TypeScript,
 ## Getting Started
 
 to access the prisma database
-
+---------------------------------------------------
 run npx prisma studio
 
 press y to install packages
 
 prisma database will open http://localhost:5555
----------------------------------------------------
-to access the nextjs frontend
 
+to access the nextjs frontend
+---------------------------------------------------
 npm install
 
 npm run dev 
