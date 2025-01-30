@@ -17,3 +17,9 @@ npm install
 npm run dev 
 
 next js will open  http://localhost:3000
+
+Note
+---------------------------------------------------
+Please disregard deployments found in the page, Unfortunately Vercel doesn't accept SQLite database
+
+https://vercel.com/guides/is-sqlite-supported-in-vercel
